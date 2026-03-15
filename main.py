@@ -37,7 +37,7 @@ def convex_hull_jarvis(points: List[Point]) -> List[Point]:
         # If same x coordinate, pick bottom most y coordinate
         elif points[i][0] == points[leftmost][0]:
             if points[i][1] < points[leftmost][1]:
-                leftmost = 1
+                leftmost = i
 
     hull = []
     p = leftmost
@@ -50,6 +50,20 @@ def convex_hull_jarvis(points: List[Point]) -> List[Point]:
         # Picks next point in the list as first q
         q = (p + 1) % n
 
+        # Check if other points, r, to see if they are on the outside
+        for r in range(n):
+            # If CCW, r is more CCW than current q
+            if get_orientation(points[p], points[q], points[r]) == 1:
+                q = r
+
+        # Move to next outermost point
+        p = q
+
+        # Stops when wraps around to first point
+        if p == leftmost:
+            break
+
+    return hull
 
 if __name__ == "__main__":
     points = [(0, 3), (2, 2), (1, 1), (2, 1), (3, 0), (0, 0), (3, 3)] 
